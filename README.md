@@ -11,8 +11,7 @@ A live desktop wallpaper of the New Mombasa Superintendent ("Virgil") from Halo 
 
 ## Install
 
-1. Zip the wallpaper files with `LivelyInfo.json` at the top level:
-   `index.html`, `scene.js`, `render.js`, `main.js`, `LivelyInfo.json`, `LivelyProperties.json`, `thumbnail.jpg`, `preview.gif`
+1. Download the zip.
 2. In Lively, click **+** and choose the zip.
 3. In Lively's settings, set wallpaper input to **Mouse** so the eyes can follow your cursor.
 
