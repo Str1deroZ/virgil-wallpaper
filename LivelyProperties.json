@@ -1,0 +1,23 @@
+{
+  "idleMinutes": {
+    "type": "slider",
+    "value": 10,
+    "text": "Fall asleep after (minutes idle)",
+    "min": 1,
+    "max": 60,
+    "step": 1
+  },
+  "cpuThreshold": {
+    "type": "slider",
+    "value": 85,
+    "text": "Alarm at sustained CPU (%)",
+    "min": 30,
+    "max": 100,
+    "step": 5
+  },
+  "faceColor": {
+    "type": "color",
+    "value": "#6F8A5F",
+    "text": "Face colour"
+  }
+}

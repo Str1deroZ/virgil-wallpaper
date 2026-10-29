@@ -1,0 +1,14 @@
+{
+  "AppVersion": "1.0.0.0",
+  "Title": "Virgil",
+  "Desc": "The New Mombasa Superintendent, alive on your desktop. Reacts to idle time, CPU load and the time of day.",
+  "Author": "samt",
+  "License": "",
+  "Contact": "",
+  "Thumbnail": "thumbnail.jpg",
+  "Preview": "preview.gif",
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": "--system-information",
+  "IsAbsolutePath": false
+}

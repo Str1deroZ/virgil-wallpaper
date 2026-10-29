@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Virgil preview frames</title>
+</head>
+<body>
+  <!-- Rendered headlessly by make-preview.py, which reads the frames out of #out. -->
+  <pre id="out"></pre>
+  <script src="../scene.js"></script>
+  <script src="../render.js"></script>
+  <script>
+    var W = 1920, H = 1080;
+    var OUT_W = 480, OUT_H = 270;
+    var C = window.VirgilScene.CAPTIONS;
+
+    // A scripted loop of Virgil's moods: [frames at 100 ms, eyes, mood, caption].
+    var SCRIPT = [
+      [12, 'open/open', 'default', 'OBEY POSTED LIMITS'],
+      [1, 'closed/closed', 'default', 'OBEY POSTED LIMITS'],
+      [8, 'open/open', 'default', 'OBEY POSTED LIMITS'],
+      [12, 'happy/happy', 'default', 'KEEP IT CLEAN'],
+      [5, 'open/open', 'default', 'KEEP IT CLEAN'],
+      [10, 'open/lidded', 'default', 'CORE DATA CORRUPTION'],
+      [1, 'closed/closed', 'default', 'CORE DATA CORRUPTION'],
+      [6, 'open/open', 'default', 'PLEASE REMAIN CALM'],
+      [14, 'angry/angry', 'alarmed', C.alarmed[0]],
+      [6, 'open/open', 'default', 'PLEASE REMAIN CALM'],
+      [12, 'closed/closed', 'asleep', 'PLEASE STAND BY'],
+      [10, 'lidded/lidded', 'drowsy', 'CURFEW IN EFFECT'],
+    ];
+
+    var full = document.createElement('canvas');
+    full.width = W; full.height = H;
+    var fctx = full.getContext('2d');
+    var out = document.createElement('canvas');
+    out.width = OUT_W; out.height = OUT_H;
+    var octx = out.getContext('2d');
+    octx.imageSmoothingQuality = 'high';
+
+    // Battery mode gives a still scene; the script then sets the face and caption.
+    var base = window.VirgilScene.computeScene({
+      date: new Date(2026, 9, 28, 14, 0), cpu: 20, idleMs: 0, cursor: null,
+      onBattery: true, width: W, height: H, settings: {}, rand: window.VirgilScene.mulberry32(1),
+    });
+    var v = base.layout.virgil;
+    // Crop around Virgil, keeping him in the upper part of the tile.
+    var cropH = H * 0.44, cropW = cropH * 16 / 9;
+    var cx = Math.min(W - cropW, v.cx - cropW * 0.62), cy = v.cy - v.r * 1.25;
+
+    var frames = [];
+    SCRIPT.forEach(function (step) {
+      var eyes = step[1].split('/');
+      for (var i = 0; i < step[0]; i++) {
+        var scene = Object.assign({}, base, {
+          face: Object.assign({}, base.face, {
+            eyes: { left: eyes[0], right: eyes[1] },
+            color: step[2] === 'alarmed' ? '#520000' : base.face.color,
+            scale: step[2] === 'asleep' ? 1 + 0.015 * Math.sin(i / 2) : 1,
+          }),
+          caption: Object.assign({}, base.caption, {
+            text: step[3],
+            display: '>> ' + step[3] + ' <<',
+            color: step[2] === 'alarmed' ? '#b01c1c' : '#ffffff',
+            glitching: false,
+          }),
+        });
+        window.VirgilRender.render(fctx, scene, 0, 1);
+        octx.drawImage(full, cx, cy, cropW, cropH, 0, 0, OUT_W, OUT_H);
+        frames.push(out.toDataURL('image/png'));
+      }
+    });
+    document.getElementById('out').textContent = JSON.stringify(frames);
+  </script>
+</body>
+</html>
